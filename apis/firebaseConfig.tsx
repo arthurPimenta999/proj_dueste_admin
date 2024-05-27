@@ -1,21 +1,13 @@
-import AppLoading from "expo-app-loading";
 import { initializeApp } from "firebase/app";
 import {
   addDoc,
-  arrayUnion,
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   getFirestore,
-  setDoc,
-  updateDoc,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { Image, Text, TextInput, View } from "react-native";
-import { styleCardapio } from "../styles/stylesCardapioAdmin";
-import { stylesPadrao } from "../styles/stylesDefault";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDy2KiQXzy0Ce5CuR83G_LE6UxJLYsWFiA",
@@ -31,6 +23,8 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
+
+export const storage = getStorage(app);
 
 // ========== funções exemplo pra ler/gravar dados ==========
 
@@ -53,63 +47,6 @@ async function writeData() {
   } catch (e) {
     console.error("Error adding document: ", e);
   }
-}
-
-// ==========================================================
-
-export function PizzasSalgadas() {
-  const [pizzaURL, setPizzaURL] = useState<string[]>([]);
-  const [pizzaTitle, setPizzaTitle] = useState([]);
-  const [pizzaPreco, setPizzaPreco] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  // requisição dos itens de dos cartões de cardapio
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const cardRef = doc(db, "pizzaCards", "pizzaSal");
-      const cardSnap = await getDoc(cardRef);
-
-      // atribuindo os valores obtidos da requisição às variáveis do useState
-
-      if (cardSnap.exists()) {
-        setPizzaURL(cardSnap.data().pizzaURL);
-        setPizzaTitle(cardSnap.data().pizzaTitle);
-        setPizzaPreco(cardSnap.data().pizzaPreco);
-      } else {
-        console.log("Documento não encontrado.");
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <AppLoading />;
-  }
-  const [busca, setBusca] = useState("");
-
-  const pizzasFiltradas = pizzaTitle
-    .map(String)
-    .filter((title) => title.toLowerCase().includes(busca.toLowerCase()));
-
-  return (
-    <View>
-      {pizzasFiltradas.map((title, index) => (
-        <View style={styleCardapio.styleCard}>
-          <Image
-            source={{ uri: pizzaURL[index] }}
-            style={styleCardapio.styleImage}
-          />
-          <View>
-            <Text style={styleCardapio.pizzaTitle}>{title}</Text>
-            <Text style={styleCardapio.precoAlign}>{pizzaPreco[index]}</Text>
-          </View>
-        </View>
-      ))}
-    </View>
-  );
 }
 
 //Deletar QUALQUER documento do BD ~~Rafinha
