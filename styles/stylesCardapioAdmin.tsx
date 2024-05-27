@@ -23,8 +23,8 @@ export const styleCardapio = StyleSheet.create({
     backgroundColor: "#fff",
     flexDirection: "row",
     borderRadius: 25,
-    shadowColor: "#000",
     alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 3,
@@ -43,6 +43,7 @@ export const styleCardapio = StyleSheet.create({
     fontSize: 18,
     marginLeft: width * 0.07,
     marginVertical: height * 0.003,
+    maxWidth: "70%",
   },
   precoAlign: {
     fontFamily: "Montserrat_400Regular",
@@ -62,18 +63,73 @@ export const styleCardapio = StyleSheet.create({
 
   // prévia de cartão
 
-  previewAlign: {
-    marginTop: height * 0.025,
-  },
   previewCardAlign: {
     marginTop: height * 0.01,
   },
 
-  // alinhar botão de adicionar pizza
+  // alinhar botões de adicionar pizza ao DB e gerar link
 
-  alignAddBtn: {
-    position: "absolute",
-    marginHorizontal: width * 0.25,
-    marginTop: height * 0.3,
+  alignPizzaBtns: {
+    marginVertical: height * 0.025,
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 25,
+  },
+
+  // alinhar icone de modal info
+
+  modalIconAlign: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  // estilos modal gerar link
+
+  imagePlaceholder: {
+    backgroundColor: "#ccc",
+    borderRadius: 25,
+    alignItems: "center",
+    width: width * 0.75,
+    height: width * 0.75,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+  },
+
+  // modal de link gerado
+
+  modalCentralizada: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalLinkStyle: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+  // estilo de texto do switch selector
+
+  switchStyle: {
+    fontFamily: "Montserrat_400Regular",
   },
 });

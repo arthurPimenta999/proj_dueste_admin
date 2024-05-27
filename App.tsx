@@ -1,3 +1,4 @@
+import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -5,7 +6,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { NavigationContainer, useTheme } from "@react-navigation/native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import MI from "react-native-vector-icons/MaterialIcons";
-
+import Entypo from "react-native-vector-icons/Entypo";
 import { useFonts } from "@expo-google-fonts/montserrat";
 import {
   Montserrat_400Regular,
@@ -14,16 +15,10 @@ import {
 import AppLoading from "expo-app-loading";
 import TelaCardapioAdmin from "./telas/telaCardapioAdmin";
 import TelaFeedbackAdmin from "./telas/telaFeedbackAdmin";
+import SubCardapio from "./telas/telaCardapioPrevia";
+import TelaHome from "./telas/telaHome";
 
 export default function App() {
-  {
-    /*
-  useFonts pra carregar fonte externa e AppLoading pra deixar a tela carregando.
-  só parar de carregar a tela quando a fonte estiver 100% pronta pra uso.
-  ~Stardust
-  */
-  }
-
   let [fontsLoaded] = useFonts({
     Montserrat_400Regular,
     Montserrat_600SemiBold,
@@ -65,18 +60,18 @@ function MyTabs() {
   theme.colors.secondaryContainer = "#fcba03";
   return (
     <Tab.Navigator
-      initialRouteName="Início"
+      initialRouteName="Home"
       activeColor="#d69e04"
       inactiveColor="#000"
       barStyle={styles.materialTabStyle}
     >
       <Tab.Screen
-        name="Editar Cardápio"
-        component={TelaCardapioAdmin}
+        name="Prévia do Cardápio"
+        component={SubCardapio}
         options={{
           tabBarIcon: ({ focused }) => (
             <Ionicon
-              name="pencil"
+              name="eye"
               size={23}
               style={styles.icons}
               color={focused ? "black" : "#333"}
@@ -84,7 +79,20 @@ function MyTabs() {
           ),
         }}
       />
-
+      <Tab.Screen
+        name="Home"
+        component={TelaHome}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Entypo
+              name="home"
+              size={23}
+              style={styles.icons}
+              color={focused ? "black" : "#333"}
+            />
+          ),
+        }}
+      />
       <Tab.Screen
         name="Feedbacks"
         component={TelaFeedbackAdmin}
