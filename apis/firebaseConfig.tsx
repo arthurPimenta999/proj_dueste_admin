@@ -1,12 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  getFirestore,
-} from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -25,36 +18,3 @@ export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
 export const storage = getStorage(app);
-
-// ========== funções exemplo pra ler/gravar dados ==========
-
-async function readData() {
-  const querySnapshot = await getDocs(collection(db, "cardapioURL"));
-  querySnapshot.forEach((doc) => {
-    console.log(`${doc.id} => ${doc.data()}`);
-  });
-}
-
-async function writeData() {
-  try {
-    const docRef = await addDoc(collection(db, "oirsrs"), {
-      first: "Allan",
-      middle: "Diniz Raposo Moreira",
-      last: "de Góes",
-    });
-
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-}
-
-//Deletar QUALQUER documento do BD ~~Rafinha
-async function DeleteData(colecao: string, id: string) {
-  try {
-    const docRef = await deleteDoc(doc(db, colecao, id));
-    console.log("Documento deletado com sucesso");
-  } catch (e) {
-    console.error("Erro ao deletar documento do ID:", id);
-  }
-}

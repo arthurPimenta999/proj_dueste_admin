@@ -70,7 +70,7 @@ export default function TelaFeedbackAdmin() {
 
         <View>
           {feedbackNome.map((title, index) => (
-            <View style={stylesFeedback.alignCard}>
+            <View key={index} style={stylesFeedback.alignCard}>
               <View style={stylesFeedback.cardStyle}>
                 <Text style={stylesFeedback.textStyle}>
                   Nome do usuário: {title}

@@ -11,20 +11,20 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { stylesPadrao } from "../styles/stylesDefault";
 import { db, storage } from "../apis/firebaseConfig";
-import { useNavigation } from "@react-navigation/native";
 import { styleCardapio } from "../styles/stylesCardapioAdmin";
-
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-
 import SwitchSelector from "react-native-switch-selector";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from "react-native-gesture-handler";
 import MCI from "react-native-vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 
 export default function TelaCardapioAdmin() {
-  const { width, height } = Dimensions.get("window");
+  const { width } = Dimensions.get("window");
 
   // useStates pra definir valores digitados nos inputs
 
@@ -38,16 +38,16 @@ export default function TelaCardapioAdmin() {
   // try-catch pra add as pizzas no cardapio
 
   async function addPizzaOnPress() {
-    if (precoPizza === "" || nomePizza === "" || urlPizza === "") {
+    if (precoPizza === "" || nomePizza === "" || previewImage === "") {
       alert("Preencha todos os campos antes de continuar.");
-    } else if (!urlRegex.test(urlPizza)) {
+    } else if (!urlRegex.test(imageURL)) {
       alert("O texto inserido no campo de link de imagem não é um URL válido.");
     } else {
       try {
-        const docRef = await updateDoc(doc(db, "pizzaCards", pizzaDoc), {
+        const docRef = await updateDoc(doc(db, "pizzaCards", pizzaRef), {
           pizzaPreco: arrayUnion("R$" + precoPizza),
           pizzaTitle: arrayUnion(nomePizza),
-          pizzaURL: arrayUnion(urlPizza),
+          pizzaURL: arrayUnion(imageURL),
         });
         return [
           docRef,
@@ -66,12 +66,6 @@ export default function TelaCardapioAdmin() {
   const snapPointModal = useMemo(() => ["20%", "34%"], []);
   const handleOpenModal = () => refModal.current?.expand();
 
-  //configurações da modal de gerar link de imagem
-
-  const refGerarLink = useRef(null);
-  const snapPointGerarLink = useMemo(() => ["67%", "67%"], []);
-  const handleOpenGerarLink = () => refGerarLink.current?.expand();
-
   const refPreco = useRef(null);
   const snapPointPreco = useMemo(() => ["18%", "18%"], []);
   const handleOpenPreco = () => refPreco.current?.expand();
@@ -88,13 +82,6 @@ export default function TelaCardapioAdmin() {
     setModalVisivel(true);
     setTimeout(() => {
       setModalVisivel(false);
-    }, 2000);
-  }
-  function timerBottomSheet() {
-    // timeout que depois de fechar a modal, fecha a bottomsheet tambem
-    refGerarLink.current?.expand();
-    setTimeout(() => {
-      refGerarLink.current?.close();
     }, 2000);
   }
 
@@ -132,7 +119,6 @@ export default function TelaCardapioAdmin() {
             );
             setImageUrl(downloadURL);
             timerModal();
-            timerBottomSheet();
             setUrlPizza(downloadURL);
           });
         }
@@ -140,7 +126,9 @@ export default function TelaCardapioAdmin() {
     }
   };
 
-  // tipos de itens que podem ser adicionados ao db
+  // nomes de documentos - valores para seletor switch
+
+  const [pizzaRef, setPizzaRef] = useState("");
 
   const options = [
     { label: "Salgada", value: "pizzaSal" },
@@ -148,215 +136,225 @@ export default function TelaCardapioAdmin() {
     { label: "Bebida", value: "pizzaBebida" },
   ];
 
-  const [pizzaDoc, setPizzaDoc] = useState("");
-
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={stylesPadrao.safeAreaAlign}>
-        <View style={stylesPadrao.titleAlign}>
-          <Text style={stylesPadrao.titleStyle}>Editar Cardápio</Text>
-        </View>
+        <ScrollView>
+          <View style={stylesPadrao.titleAlign}>
+            <Text style={stylesPadrao.titleStyle}>Editar Cardápio</Text>
+          </View>
 
-        <View style={styleCardapio.fullViewAlign}>
-          <View>
-            <View style={{ marginBottom: 10 }}>
-              <Text style={stylesPadrao.subTitle400}>Tipo de pizza/item:</Text>
-            </View>
-
-            <View style={{ marginBottom: 10 }}>
-              <SwitchSelector
-                options={options}
-                initial={0}
-                onPress={(value) => setPizzaDoc(value)}
-                selectedColor={"#000"}
-                buttonColor={"#fcba04"}
-                textStyle={styleCardapio.switchStyle}
-                selectedTextStyle={styleCardapio.switchStyle}
-              />
-            </View>
-            {/* textinput de titulo da pizza */}
+          <View style={styleCardapio.fullViewAlign}>
             <View>
-              <Text style={stylesPadrao.subTitle400}>Nome do item:</Text>
-              <TextInput
-                selectionColor={"#d69e04"}
-                style={styleCardapio.pizzaAddInput}
-                placeholder="Digite o nome do item"
-                onChangeText={setNomePizza}
-                value={nomePizza}
-              />
-              <View style={styleCardapio.modalIconAlign}>
-                <Text style={stylesPadrao.subTitle400}>Preço do item:</Text>
-                <Pressable onPress={handleOpenPreco}>
-                  <MCI name="information" size={20} />
-                </Pressable>
-              </View>
-              <TextInput
-                selectionColor={"#d69e04"}
-                style={styleCardapio.pizzaAddInput}
-                placeholder="Digite o preço do item"
-                onChangeText={setPrecoPizza}
-                value={precoPizza}
-              />
-              <View style={styleCardapio.modalIconAlign}>
+              <View style={{ marginBottom: 10 }}>
                 <Text style={stylesPadrao.subTitle400}>
-                  Link de imagem do item:
+                  Tipo de pizza/item:
                 </Text>
-                <Pressable onPress={handleOpenModal}>
-                  <MCI name="information" size={20} />
-                </Pressable>
               </View>
-              <TextInput
-                selectionColor={"#d69e04"}
-                style={styleCardapio.pizzaAddInput}
-                placeholder="Copie aqui o URL da imagem"
-                onChangeText={setUrlPizza}
-                value={urlPizza}
-              />
 
-              <View style={styleCardapio.alignPizzaBtns}>
-                <Pressable onPress={addPizzaOnPress}>
-                  <View style={stylesPadrao.btn}>
-                    <Text style={stylesPadrao.btnText}>Adicionar</Text>
-                  </View>
-                </Pressable>
-
-                <Pressable onPress={handleOpenGerarLink}>
-                  <View style={stylesPadrao.btn}>
-                    <Text style={stylesPadrao.btnText}>Gerar link</Text>
-                  </View>
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <Text
-          style={[stylesPadrao.subTitle600, { marginHorizontal: width * 0.05 }]}
-        >
-          Prévia:
-        </Text>
-        <View style={styleCardapio.previewCardAlign}>
-          <View style={styleCardapio.styleCard}>
-            <Image
-              source={{ uri: urlPizza }}
-              style={styleCardapio.styleImage}
-            />
-            <View>
-              <Text style={styleCardapio.pizzaTitle}>{nomePizza}</Text>
-              <Text style={styleCardapio.precoAlign}>R${precoPizza}</Text>
-            </View>
-          </View>
-        </View>
-
-        <BottomSheet
-          ref={refPreco}
-          index={-1}
-          snapPoints={snapPointPreco}
-          enablePanDownToClose={true}
-          style={[stylesPadrao.modalStyle, { alignItems: "center" }]}
-          backgroundStyle={{ backgroundColor: "#fafafa" }}
-        >
-          <View style={stylesPadrao.modalContainer}>
-            <View style={stylesPadrao.modalTitleAlign}>
-              <Text style={[stylesPadrao.modalTitle, { textAlign: "center" }]}>
-                Aviso
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[stylesPadrao.regularFont400, { textAlign: "center" }]}
-              >
-                Padronizar: sempre usar decimais nos preços. Exemplo: {"\n"}
-                "R$40,00"
-              </Text>
-            </View>
-          </View>
-        </BottomSheet>
-
-        <BottomSheet
-          ref={refModal}
-          index={-1}
-          snapPoints={snapPointModal}
-          enablePanDownToClose={true}
-          style={stylesPadrao.modalStyle}
-          backgroundStyle={{ backgroundColor: "#fafafa" }}
-        >
-          <View style={stylesPadrao.modalContainer}>
-            <View style={stylesPadrao.modalTitleAlign}>
-              <Text style={[stylesPadrao.modalTitle, { textAlign: "center" }]}>
-                Porquê um URL e não uma imagem da galeria?
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[stylesPadrao.regularFont400, { textAlign: "center" }]}
-              >
-                O banco de dados só consegue identificar imagens se elas forem
-                links.{"\n"}
-                {"\n"}
-                Caso você não tenha um link pronto, use a função de fazer upload
-                de imagem. Essa função recebe imagens da sua galeria e já gera
-                um link legível para o banco de dados.
-              </Text>
-            </View>
-          </View>
-        </BottomSheet>
-
-        <BottomSheet
-          ref={refGerarLink}
-          index={-1}
-          snapPoints={snapPointGerarLink}
-          enablePanDownToClose={true}
-          style={[stylesPadrao.modalStyle, { alignItems: "center" }]}
-          backgroundStyle={{ backgroundColor: "#fafafa" }}
-        >
-          <View style={stylesPadrao.modalContainer}>
-            <View style={stylesPadrao.modalTitleAlign}>
-              <Text style={stylesPadrao.modalTitle}>Gerar Link</Text>
-            </View>
-
-            <Text style={[stylesPadrao.subTitle400, { marginBottom: 10 }]}>
-              Imagem escolhida:
-            </Text>
-            <View style={styleCardapio.imagePlaceholder}>
-              {previewImage && (
-                <Image
-                  source={{ uri: previewImage }}
-                  style={{ width: width * 0.75, height: width * 0.75 }}
+              <View style={{ marginBottom: 10 }}>
+                <SwitchSelector
+                  options={options}
+                  initial={0}
+                  onPress={(value) => setPizzaRef(value)}
+                  selectedColor={"#000"}
+                  buttonColor={"#fcba04"}
+                  textStyle={styleCardapio.switchStyle}
+                  selectedTextStyle={styleCardapio.switchStyle}
                 />
-              )}
-            </View>
-
-            <View style={{ alignItems: "center" }}>
-              <Pressable onPress={pegarImagens}>
-                <View>
-                  <View style={stylesPadrao.btn}>
-                    <Text style={stylesPadrao.btnText}>Adicionar</Text>
-                  </View>
+              </View>
+              {/* textinput de titulo da pizza */}
+              <View>
+                <Text style={stylesPadrao.subTitle400}>Nome do item:</Text>
+                <TextInput
+                  selectionColor={"#d69e04"}
+                  style={stylesPadrao.defaultInput}
+                  placeholder="Digite o nome do item"
+                  onChangeText={setNomePizza}
+                  value={nomePizza}
+                />
+                <View style={styleCardapio.modalIconAlign}>
+                  <Text style={stylesPadrao.subTitle400}>Preço do item:</Text>
+                  <Pressable onPress={handleOpenPreco}>
+                    <MCI name="information" size={20} />
+                  </Pressable>
                 </View>
-              </Pressable>
-            </View>
-          </View>
-        </BottomSheet>
+                <TextInput
+                  selectionColor={"#d69e04"}
+                  style={stylesPadrao.defaultInput}
+                  placeholder="Digite o preço do item"
+                  onChangeText={setPrecoPizza}
+                  value={precoPizza}
+                />
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisivel}
-          onRequestClose={() => {
-            setModalVisivel(!modalVisivel);
-          }}
-        >
-          <View style={styleCardapio.modalCentralizada}>
-            <View style={styleCardapio.modalLinkStyle}>
-              <Text style={stylesPadrao.regularFont400}>
-                Link gerado com sucesso!
-              </Text>
+                <Text style={stylesPadrao.subTitle400}>Imagem do item:</Text>
+              </View>
+            </View>
+
+            <View style={styleCardapio.alignImagePlaceholder}>
+              <View style={styleCardapio.imagePlaceholder}>
+                {previewImage && (
+                  <Image
+                    source={{ uri: previewImage }}
+                    style={{ width: width * 0.75, height: width * 0.75 }}
+                  />
+                )}
+              </View>
+            </View>
+
+            <Pressable onPress={pegarImagens}>
+              <View style={styleCardapio.addImageAlign}>
+                <View style={stylesPadrao.btn}>
+                  <Text style={stylesPadrao.btnText}>Adicionar Imagem</Text>
+                </View>
+              </View>
+            </Pressable>
+          </View>
+
+          <Text
+            style={[
+              stylesPadrao.subTitle600,
+              { marginHorizontal: width * 0.05 },
+            ]}
+          >
+            Prévia:
+          </Text>
+
+          <View style={styleCardapio.previewCardAlign}>
+            <View style={styleCardapio.styleCard}>
+              <Image
+                source={{ uri: previewImage }}
+                style={styleCardapio.styleImage}
+              />
+              <View>
+                <Text style={styleCardapio.pizzaTitle}>{nomePizza}</Text>
+                <Text style={styleCardapio.precoAlign}>R${precoPizza}</Text>
+              </View>
             </View>
           </View>
-        </Modal>
+
+          <View style={styleCardapio.alignPizzaBtns}>
+            <Pressable onPress={addPizzaOnPress}>
+              <View style={stylesPadrao.btn}>
+                <Text style={stylesPadrao.btnText}>Adicionar</Text>
+              </View>
+            </Pressable>
+          </View>
+
+          <BottomSheet
+            ref={refPreco}
+            index={-1}
+            snapPoints={snapPointPreco}
+            enablePanDownToClose={true}
+            style={[stylesPadrao.modalStyle, { alignItems: "center" }]}
+            backgroundStyle={{ backgroundColor: "#fafafa" }}
+          >
+            <View style={stylesPadrao.modalContainer}>
+              <View style={stylesPadrao.modalTitleAlign}>
+                <Text
+                  style={[stylesPadrao.modalTitle, { textAlign: "center" }]}
+                >
+                  Aviso
+                </Text>
+              </View>
+
+              <View>
+                <Text
+                  style={[stylesPadrao.regularFont400, { textAlign: "center" }]}
+                >
+                  Padronizar: sempre usar decimais nos preços. Exemplo: {"\n"}
+                  "R$40,00"
+                </Text>
+              </View>
+            </View>
+          </BottomSheet>
+
+          <BottomSheet
+            ref={refModal}
+            index={-1}
+            snapPoints={snapPointModal}
+            enablePanDownToClose={true}
+            style={stylesPadrao.modalStyle}
+            backgroundStyle={{ backgroundColor: "#fafafa" }}
+          >
+            <View style={stylesPadrao.modalContainer}>
+              <View style={stylesPadrao.modalTitleAlign}>
+                <Text
+                  style={[stylesPadrao.modalTitle, { textAlign: "center" }]}
+                >
+                  Porquê um URL e não uma imagem da galeria?
+                </Text>
+              </View>
+
+              <View>
+                <Text
+                  style={[stylesPadrao.regularFont400, { textAlign: "center" }]}
+                >
+                  O banco de dados só consegue identificar imagens se elas forem
+                  links.{"\n"}
+                  {"\n"}
+                  Caso você não tenha um link pronto, use a função de fazer
+                  upload de imagem. Essa função recebe imagens da sua galeria e
+                  já gera um link legível para o banco de dados.
+                </Text>
+              </View>
+            </View>
+          </BottomSheet>
+
+          {/* <BottomSheet
+            ref={refGerarLink}
+            index={-1}
+            snapPoints={snapPointGerarLink}
+            enablePanDownToClose={true}
+            style={[stylesPadrao.modalStyle, { alignItems: "center" }]}
+            backgroundStyle={{ backgroundColor: "#fafafa" }}
+          >
+            <View style={stylesPadrao.modalContainer}>
+              <View style={stylesPadrao.modalTitleAlign}>
+                <Text style={stylesPadrao.modalTitle}>Gerar Link</Text>
+              </View>
+
+              <Text style={[stylesPadrao.subTitle400, { marginBottom: 10 }]}>
+                Imagem escolhida:
+              </Text>
+              <View style={styleCardapio.imagePlaceholder}>
+                {previewImage && (
+                  <Image
+                    source={{ uri: previewImage }}
+                    style={{ width: width * 0.75, height: width * 0.75 }}
+                  />
+                )}
+              </View>
+
+              <View style={{ alignItems: "center", marginVertical: 20 }}>
+                <Pressable onPress={pegarImagens}>
+                  <View>
+                    <View style={stylesPadrao.btn}>
+                      <Text style={stylesPadrao.btnText}>Adicionar</Text>
+                    </View>
+                  </View>
+                </Pressable>
+              </View>
+            </View>
+          </BottomSheet> */}
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisivel}
+            onRequestClose={() => {
+              setModalVisivel(!modalVisivel);
+            }}
+          >
+            <View style={styleCardapio.modalCentralizada}>
+              <View style={styleCardapio.modalLinkStyle}>
+                <Text style={stylesPadrao.regularFont400}>
+                  Link gerado com sucesso!
+                </Text>
+              </View>
+            </View>
+          </Modal>
+        </ScrollView>
       </SafeAreaView>
     </GestureHandlerRootView>
   );

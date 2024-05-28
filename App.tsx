@@ -1,6 +1,6 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { NavigationContainer, useTheme } from "@react-navigation/native";
@@ -13,10 +13,11 @@ import {
   Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
 import AppLoading from "expo-app-loading";
-import TelaCardapioAdmin from "./telas/telaCardapioAdmin";
 import TelaFeedbackAdmin from "./telas/telaFeedbackAdmin";
 import SubCardapio from "./telas/telaCardapioPrevia";
 import TelaHome from "./telas/telaHome";
+import TelaExcluir from "./telas/telaExcluirCard";
+import TelaCardapioAdmin from "./telas/telaCardapioAdmin";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -60,18 +61,18 @@ function MyTabs() {
   theme.colors.secondaryContainer = "#fcba03";
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Prévia do Cardápio"
       activeColor="#d69e04"
       inactiveColor="#000"
       barStyle={styles.materialTabStyle}
     >
       <Tab.Screen
-        name="Prévia do Cardápio"
-        component={SubCardapio}
+        name="Criar Cartões"
+        component={TelaCardapioAdmin}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Ionicon
-              name="eye"
+            <Entypo
+              name="home"
               size={23}
               style={styles.icons}
               color={focused ? "black" : "#333"}
@@ -80,12 +81,12 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="Home"
-        component={TelaHome}
+        name="Prévia do Cardápio"
+        component={SubCardapio}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Entypo
-              name="home"
+            <Ionicon
+              name="eye"
               size={23}
               style={styles.icons}
               color={focused ? "black" : "#333"}

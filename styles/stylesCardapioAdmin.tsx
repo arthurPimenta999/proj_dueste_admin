@@ -50,17 +50,6 @@ export const styleCardapio = StyleSheet.create({
     marginLeft: width * 0.07,
   },
 
-  // inputs pra adicionar pizzas
-
-  pizzaAddInput: {
-    marginVertical: height * 0.01,
-    backgroundColor: "#ccc",
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    fontFamily: "Montserrat_400Regular",
-  },
-
   // prévia de cartão
 
   previewCardAlign: {
@@ -85,6 +74,12 @@ export const styleCardapio = StyleSheet.create({
   },
 
   // estilos modal gerar link
+
+  alignImagePlaceholder: {
+    alignItems: "center",
+    marginTop: height * 0.01,
+    marginBottom: height * 0.02,
+  },
 
   imagePlaceholder: {
     backgroundColor: "#ccc",
@@ -131,5 +126,11 @@ export const styleCardapio = StyleSheet.create({
 
   switchStyle: {
     fontFamily: "Montserrat_400Regular",
+  },
+
+  // alinhar adicionar imagem
+
+  addImageAlign: {
+    alignItems: "center",
   },
 });

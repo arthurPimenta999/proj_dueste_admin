@@ -99,4 +99,15 @@ export const stylesPadrao = StyleSheet.create({
     marginTop: height * 0.025,
     alignItems: "center",
   },
+
+  // estilo de input padrão
+
+  defaultInput: {
+    marginVertical: height * 0.01,
+    backgroundColor: "#ccc",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    fontFamily: "Montserrat_400Regular",
+  },
 });
