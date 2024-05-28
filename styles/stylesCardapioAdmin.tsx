@@ -75,6 +75,12 @@ export const styleCardapio = StyleSheet.create({
 
   // estilos modal gerar link
 
+  alignImagePlaceholder: {
+    alignItems: "center",
+    marginTop: height * 0.01,
+    marginBottom: height * 0.02,
+  },
+
   imagePlaceholder: {
     backgroundColor: "#ccc",
     borderRadius: 25,
@@ -120,5 +126,11 @@ export const styleCardapio = StyleSheet.create({
 
   switchStyle: {
     fontFamily: "Montserrat_400Regular",
+  },
+
+  // alinhar adicionar imagem
+
+  addImageAlign: {
+    alignItems: "center",
   },
 });

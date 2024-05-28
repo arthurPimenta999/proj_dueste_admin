@@ -3,15 +3,10 @@ import { View, Text, Pressable, Image, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { stylesPadrao } from "../styles/stylesDefault";
 import { useNavigation } from "@react-navigation/native";
-import NavigationContainer from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import TelaCardapioAdmin from "./telaCardapioAdmin";
 import styleHome from "../styles/stylesHome";
-import TelaFeedbackAdmin from "./telaFeedbackAdmin";
 import LogoDueste from "../components/duesteLogo.png";
-import TelaExcluir from "./telaExcluirCard";
 
-function TelaHome() {
+export default function TelaHome() {
   const navigation = useNavigation();
 
   const [boasVindas, setBoasVindas] = useState("");
@@ -74,12 +69,12 @@ function TelaHome() {
         <View style={styleHome.flexEndBtn}>
           <View style={styleHome.alignBtn}>
             <View style={styleHome.alignBtnRow}>
-              <Pressable onPress={() => navigation.navigate("Create")}>
+              <Pressable onPress={() => {}}>
                 <View style={[stylesPadrao.btn, { backgroundColor: "#eee" }]}>
                   <Text style={stylesPadrao.btnText}>Criar Cartão</Text>
                 </View>
               </Pressable>
-              <Pressable onPress={() => navigation.navigate("Delete")}>
+              <Pressable onPress={() => {}}>
                 <View style={[stylesPadrao.btn, { backgroundColor: "#eee" }]}>
                   <Text style={stylesPadrao.btnText}>Excluir Cartão</Text>
                 </View>
@@ -89,12 +84,12 @@ function TelaHome() {
 
           <View style={styleHome.alignBtn}>
             <View style={styleHome.alignBtnRow}>
-              <Pressable onPress={() => navigation.navigate("Update")}>
+              <Pressable onPress={() => {}}>
                 <View style={[stylesPadrao.btn, { backgroundColor: "#eee" }]}>
                   <Text style={stylesPadrao.btnText}>Editar Cartão</Text>
                 </View>
               </Pressable>
-              <Pressable onPress={() => navigation.navigate("Feedback")}>
+              <Pressable onPress={() => {}}>
                 <View style={[stylesPadrao.btn, { backgroundColor: "#eee" }]}>
                   <Text style={stylesPadrao.btnText}>Ver Opiniões</Text>
                 </View>
@@ -106,24 +101,3 @@ function TelaHome() {
     </SafeAreaView>
   );
 }
-
-function Telas() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-      initialRouteName="Delete"
-    >
-      <Stack.Screen name="Inicio" component={TelaHome} />
-      <Stack.Screen name="Create" component={TelaCardapioAdmin} />
-      <Stack.Screen name="Update" component={TelaCardapioAdmin} />
-      <Stack.Screen name="Delete" component={TelaExcluir} />
-      <Stack.Screen name="Feedback" component={TelaFeedbackAdmin} />
-    </Stack.Navigator>
-  );
-}
-
-const Stack = createStackNavigator();
-
-export default Telas;
