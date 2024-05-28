@@ -53,6 +53,12 @@ export default function TelaCardapioAdmin() {
           docRef,
           console.log("Documento Alterado com sucesso"),
           alert("Sabor adicionado com sucesso!"),
+          setTimeout(() => {
+            setImageUrl("");
+            setNomePizza("");
+            setPrecoPizza("");
+            setPreviewImage(null);
+          }, 2000),
         ];
       } catch (e) {
         console.error("Erro ao alterar documento:", e);
@@ -82,7 +88,7 @@ export default function TelaCardapioAdmin() {
     setModalVisivel(true);
     setTimeout(() => {
       setModalVisivel(false);
-    }, 2000);
+    }, 1000);
   }
 
   const pegarImagens = async () => {
