@@ -13,7 +13,6 @@ import {
   Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
 import AppLoading from "expo-app-loading";
-import TelaCardapioAdmin from "./telas/telaCardapioAdmin";
 import TelaFeedbackAdmin from "./telas/telaFeedbackAdmin";
 import SubCardapio from "./telas/telaCardapioPrevia";
 import TelaHome from "./telas/telaHome";

@@ -9,6 +9,7 @@ import TelaCardapioAdmin from "./telaCardapioAdmin";
 import styleHome from "../styles/stylesHome";
 import TelaFeedbackAdmin from "./telaFeedbackAdmin";
 import LogoDueste from "../components/duesteLogo.png";
+import TelaExcluir from "./telaExcluirCard";
 
 function TelaHome() {
   const navigation = useNavigation();
@@ -112,12 +113,12 @@ function Telas() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="Inicio"
+      initialRouteName="Delete"
     >
       <Stack.Screen name="Inicio" component={TelaHome} />
       <Stack.Screen name="Create" component={TelaCardapioAdmin} />
       <Stack.Screen name="Update" component={TelaCardapioAdmin} />
-      <Stack.Screen name="Delete" component={TelaCardapioAdmin} />
+      <Stack.Screen name="Delete" component={TelaExcluir} />
       <Stack.Screen name="Feedback" component={TelaFeedbackAdmin} />
     </Stack.Navigator>
   );

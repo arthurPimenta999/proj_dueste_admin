@@ -11,12 +11,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { stylesPadrao } from "../styles/stylesDefault";
 import { db, storage } from "../apis/firebaseConfig";
-import { useNavigation } from "@react-navigation/native";
 import { styleCardapio } from "../styles/stylesCardapioAdmin";
-
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-
 import SwitchSelector from "react-native-switch-selector";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -179,7 +176,7 @@ export default function TelaCardapioAdmin() {
               <Text style={stylesPadrao.subTitle400}>Nome do item:</Text>
               <TextInput
                 selectionColor={"#d69e04"}
-                style={styleCardapio.pizzaAddInput}
+                style={stylesPadrao.defaultInput}
                 placeholder="Digite o nome do item"
                 onChangeText={setNomePizza}
                 value={nomePizza}
@@ -192,7 +189,7 @@ export default function TelaCardapioAdmin() {
               </View>
               <TextInput
                 selectionColor={"#d69e04"}
-                style={styleCardapio.pizzaAddInput}
+                style={stylesPadrao.defaultInput}
                 placeholder="Digite o preço do item"
                 onChangeText={setPrecoPizza}
                 value={precoPizza}
@@ -207,7 +204,7 @@ export default function TelaCardapioAdmin() {
               </View>
               <TextInput
                 selectionColor={"#d69e04"}
-                style={styleCardapio.pizzaAddInput}
+                style={stylesPadrao.defaultInput}
                 placeholder="Copie aqui o URL da imagem"
                 onChangeText={setUrlPizza}
                 value={urlPizza}
