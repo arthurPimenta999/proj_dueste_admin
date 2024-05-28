@@ -142,6 +142,7 @@ export default function SubCardapio() {
       return [
         console.log("Cartão deletado com sucesso."),
         alert("Cartão deletado com sucesso."),
+        update(),
       ];
     } catch (e) {
       console.error("Erro ao alterar documento:", e);
